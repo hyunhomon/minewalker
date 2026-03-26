@@ -1,0 +1,19 @@
+name: "[Infra] 인프라/설정"
+description: 빌드, CI, 프로젝트 설정
+labels: ["infra"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 설명
+      placeholder: 설정/인프라 작업 설명
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: 완료 조건
+      placeholder: |
+        - [ ] 조건 1
+    validations:
+      required: true
