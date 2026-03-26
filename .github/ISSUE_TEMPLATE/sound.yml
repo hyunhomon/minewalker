@@ -1,0 +1,35 @@
+name: "[Sound] 사운드"
+description: BGM/SFX 추가/수정
+labels: ["sound"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 설명
+      placeholder: 필요한 사운드 설명
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: 사운드 타입
+      options:
+        - BGM
+        - SFX
+    validations:
+      required: true
+  - type: textarea
+    id: spec
+    attributes:
+      label: 스펙
+      value: |
+        - 포맷: WAV (SFX) / MP3 (BGM)
+        - 저장 경로: Assets/Audio/
+  - type: textarea
+    id: done
+    attributes:
+      label: 완료 조건
+      placeholder: |
+        - [ ] 조건 1
+    validations:
+      required: true

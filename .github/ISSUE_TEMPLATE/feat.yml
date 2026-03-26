@@ -1,0 +1,33 @@
+name: "[Feat] 기능 구현"
+description: 새로운 기능 구현
+labels: ["feat"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 설명
+      placeholder: 구현할 기능 설명
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: 관련 파일
+      value: |
+        - 씬:
+        - 프리팹:
+        - 스크립트:
+  - type: textarea
+    id: done
+    attributes:
+      label: 완료 조건
+      placeholder: |
+        - [ ] 조건 1
+        - [ ] 조건 2
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: 의존성
+      placeholder: "예: #3 완료 후 착수 가능"
