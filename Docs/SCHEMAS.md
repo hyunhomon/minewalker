@@ -116,6 +116,63 @@ public class RecordData
 // Key: "BestDistance", "TotalDeaths", "TotalGamesPlayed"
 ```
 
+## Input
+
+```
+이동 1회 = 1턴. 턴 기반 게임이므로 실시간 입력이 아님.
+```
+
+```csharp
+// Input System 기반 (InputSystem_Actions.inputactions)
+// PC: WASD 또는 Arrow Keys
+// 모바일: 스와이프 (추후)
+// 게임패드: D-Pad 또는 Left Stick
+
+public enum MoveDirection
+{
+    Up,
+    Down,
+    Left,
+    Right
+}
+```
+
+- 이동 입력 시 해당 방향 타일로 1칸 이동
+- 이동 불가 (맵 밖) 시 무시
+- 이동 완료 후 턴 종료 → 기믹 `OnTick()` 호출
+
+## Camera
+
+```csharp
+public class CameraConfig
+{
+    public float orthographicSize = 5f;     // 카메라 오쏘 사이즈
+    public float tileWorldSize = 1f;        // 타일 1칸 = 1 world unit
+    public int tilePixelSize = 16;          // 스프라이트 16x16 px
+    public int pixelsPerUnit = 16;          // 16px = 1 world unit
+}
+
+// 타겟 해상도: 1920x1080 (PC), 비율 유지 레터박스
+// 카메라는 플레이어를 따라 이동 (전진 방향 약간 앞을 비춤)
+```
+
+## Turn System
+
+```
+플레이어 이동 1회 = 1턴
+
+턴 흐름:
+1. 플레이어 입력 대기
+2. 이동 실행
+3. 타일 공개 (지뢰 → 사망 / 안전 → 숫자 표시)
+4. 거리 업데이트
+5. 기믹 OnTick() 호출
+6. 1로 돌아감
+```
+
+- 기믹 `duration`은 **턴 단위** (예: 블랙아웃 = 3턴마다 1턴 암전)
+- 실시간 기믹 (숫자 깜빡임 등)은 duration과 별개로 비주얼 이펙트로 처리
+
 ## Difficulty Curve
 
 ```

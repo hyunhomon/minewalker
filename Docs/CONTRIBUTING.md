@@ -100,6 +100,64 @@ GitHub 이슈 기반으로 브랜치를 생성합니다.
 
 ---
 
+## 에셋 네이밍 컨벤션
+
+### 스크립트
+
+PascalCase. 클래스명 = 파일명.
+
+```
+GameManager.cs, PlayerController.cs, GimmickData.cs
+```
+
+### ScriptableObject
+
+`{타입}_{이름}.asset`
+
+```
+GimmickData_FakeNumber.asset
+GimmickData_Fog.asset
+MapConfig_Default.asset
+```
+
+### Prefab
+
+PascalCase. 역할이 명확하게.
+
+```
+Player.prefab
+Tile_Hidden.prefab
+Tile_Revealed.prefab
+Effect_Explosion.prefab
+UI_DeathScreen.prefab
+```
+
+### Sprite
+
+snake_case. `{대상}_{상태}_{방향}.png`
+
+```
+player_idle_down.png
+player_walk_up_01.png
+player_walk_up_02.png
+tile_hidden.png
+tile_mine.png
+tile_number_1.png
+```
+
+### Audio
+
+snake_case. `{타입}_{설명}.{확장자}`
+
+```
+bgm_main_theme.mp3
+sfx_step.wav
+sfx_explosion.wav
+sfx_tile_reveal.wav
+```
+
+---
+
 ## Git LFS
 
 바이너리 파일은 Git LFS로 관리됩니다. `.gitattributes`에 정의된 확장자는 자동으로 LFS를 탑니다.

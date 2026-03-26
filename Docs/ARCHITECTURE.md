@@ -4,38 +4,41 @@
 
 ```
 Assets/
-├── Scenes/              # 씬 파일
-│   ├── Main.unity       # 메인 게임 씬
-│   └── UI.unity         # UI 전용 씬 (Additive)
+├── Scenes/                    # 씬 파일
+│   ├── Main.unity             # 메인 게임 씬
+│   └── UI.unity               # UI 전용 씬 (Additive)
 ├── Scripts/
-│   ├── Core/            # 게임 핵심 시스템
+│   ├── Core/                  # 게임 핵심 시스템
 │   │   ├── GameManager.cs
 │   │   ├── TileSystem.cs
 │   │   └── MapGenerator.cs
-│   ├── Player/          # 플레이어 관련
+│   ├── Player/                # 플레이어 관련
 │   │   ├── PlayerController.cs
 │   │   └── PlayerInput.cs
-│   ├── Gimmick/         # 기믹 시스템
+│   ├── Gimmick/               # 기믹 시스템
 │   │   ├── GimmickManager.cs
-│   │   └── Gimmicks/    # 개별 기믹 구현
-│   ├── UI/              # UI 스크립트
+│   │   └── Gimmicks/          # 개별 기믹 구현
+│   ├── UI/                    # UI 스크립트
 │   │   ├── HUDController.cs
 │   │   ├── DeathScreen.cs
 │   │   └── RecordDisplay.cs
-│   └── Utils/           # 공용 유틸리티
+│   └── Utils/                 # 공용 유틸리티
 ├── Prefabs/
 │   ├── Player/
 │   ├── Tiles/
 │   ├── Effects/
 │   └── UI/
-├── Sprites/             # 도트 아트 (16x16)
+├── Sprites/                   # 도트 아트 (16x16)
 │   ├── Player/
 │   ├── Tiles/
 │   └── Effects/
 ├── Audio/
 │   ├── BGM/
 │   └── SFX/
-└── Settings/            # URP, 렌더링 설정
+├── ScriptableObjects/         # SO 데이터 에셋
+│   ├── Gimmicks/              # GimmickData SO
+│   └── Configs/               # MapConfig 등 게임 설정 SO
+└── Settings/                  # URP, 렌더링 설정
 ```
 
 ## 시스템 구조
