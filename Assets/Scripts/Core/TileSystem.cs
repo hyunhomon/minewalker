@@ -89,6 +89,58 @@ public class TileSystem : MonoBehaviour
 
     public IReadOnlyDictionary<Vector2Int, TileData> GetAllTiles() => _tiles;
 
+    /// <summary>
+    /// 타일을 공개하고, adjacentMines가 0이면 인접 빈 타일을 BFS로 연쇄 공개합니다.
+    /// </summary>
+    /// <returns>지뢰를 밟았으면 true</returns>
+    public bool RevealConnectedEmpty(Vector2Int startPosition)
+    {
+        if (!_tiles.TryGetValue(startPosition, out TileData startData))
+            return false;
+
+        if (startData.isMine)
+        {
+            RevealTile(startPosition);
+            return true;
+        }
+
+        var queue = new Queue<Vector2Int>();
+        var visited = new HashSet<Vector2Int>();
+
+        queue.Enqueue(startPosition);
+        visited.Add(startPosition);
+
+        while (queue.Count > 0)
+        {
+            var pos = queue.Dequeue();
+
+            if (!_tiles.TryGetValue(pos, out TileData data) || data.state != TileState.Hidden)
+                continue;
+
+            RevealTile(pos);
+
+            if (data.adjacentMines != 0)
+                continue;
+
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dx == 0 && dy == 0) continue;
+
+                    var neighbor = new Vector2Int(pos.x + dx, pos.y + dy);
+                    if (!visited.Contains(neighbor) && _tiles.ContainsKey(neighbor))
+                    {
+                        visited.Add(neighbor);
+                        queue.Enqueue(neighbor);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void RefreshVisual(Vector2Int position)
     {
         if (!_tiles.TryGetValue(position, out TileData data))
