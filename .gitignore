@@ -29,6 +29,7 @@ crashlytics-build.properties
 /.vs/
 /.vscode/
 /.claude/
+CLAUDE.md
 *.csproj
 *.unityproj
 *.sln
