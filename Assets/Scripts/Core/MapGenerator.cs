@@ -1,8 +1,11 @@
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 /// <summary>
 /// 지뢰찾기 맵 그리드를 생성하고 TileSystem에 등록합니다.
-/// 거리 기반 지뢰 밀도 스케일링을 적용합니다.
+/// 게임 시작 시 카메라 화면을 꽉 채우는 크기로 생성되며, 플레이어 스폰 지점(중앙)에는 지뢰를 배치하지 않습니다.
 /// </summary>
 public class MapGenerator : MonoBehaviour
 {
@@ -10,24 +13,44 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private TileSystem tileSystem;
 
     [Header("Grid Settings")]
-    [SerializeField] private int width = 20;
-    [SerializeField] private int height = 20;
+    [SerializeField] [Range(0f, 1f)] private float mineDensity = 0.15f;
+    [SerializeField] private int padding = 2; // 화면 경계 밖으로 여유 타일 수
+
+    // 생성된 그리드의 중앙 타일 좌표 (플레이어 스폰 지점)
+    public Vector2Int SpawnTile { get; private set; }
+
+    
+    private void Start()
+    {
+        GenerateMap();
+    }
 
     /// <summary>
-    /// 지정한 거리 기준으로 그리드를 생성합니다.
+    /// 카메라 화면을 꽉 채우는 맵을 생성합니다.
+    /// 중앙이 플레이어 스폰 지점이며, 해당 칸은 지뢰가 없습니다.
     /// </summary>
-    /// <param name="originDistance">현재 플레이어 거리 (밀도 계산 기준)</param>
-    /// <param name="originOffset">그리드 시작 좌표 (Tilemap 기준)</param>
-    public void GenerateMap(int originDistance = 0, Vector2Int originOffset = default)
+    public void GenerateMap()
     {
-        float density = GetMineDensity(originDistance);
+        var cam = Camera.main;
+        float orthoSize = cam != null ? cam.orthographicSize : 5f;
+        float aspect = cam != null ? cam.aspect : (16f / 9f);
+
+        int halfH = Mathf.CeilToInt(orthoSize) + padding;
+        int halfW = Mathf.CeilToInt(orthoSize * aspect) + padding;
+
+        int width  = halfW * 2 + 1;
+        int height = halfH * 2 + 1;
+
+        // 그리드를 (0,0) 중심으로 배치
+        var originOffset = new Vector2Int(-halfW, -halfH);
+        SpawnTile = Vector2Int.zero;
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 var pos = new Vector2Int(originOffset.x + x, originOffset.y + y);
-                bool isMine = Random.value < density;
+                bool isMine = Random.value < mineDensity && pos != SpawnTile;
 
                 tileSystem.RegisterTile(new TileData
                 {
@@ -39,10 +62,10 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        CalculateAdjacentMines(originOffset);
+        CalculateAdjacentMines(originOffset, width, height);
     }
 
-    private void CalculateAdjacentMines(Vector2Int originOffset)
+    private void CalculateAdjacentMines(Vector2Int originOffset, int width, int height)
     {
         for (int x = 0; x < width; x++)
         {
@@ -72,14 +95,24 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 거리에 따른 지뢰 밀도를 반환합니다.
-    /// </summary>
-    public static float GetMineDensity(int distance)
+#if UNITY_EDITOR
+    [ContextMenu("Debug: Validate Mine Density")]
+    private void DebugValidateMineDensity()
     {
-        if (distance <= 50)   return 0.15f;
-        if (distance <= 150)  return 0.22f;
-        if (distance <= 300)  return 0.28f;
-        return 0.33f;
+        var allTiles = tileSystem.GetAllTiles();
+        if (allTiles.Count == 0)
+        {
+            Debug.LogWarning("[MapGenerator] 타일이 없습니다. GenerateMap()을 먼저 호출하세요.");
+            return;
+        }
+
+        int total = allTiles.Count;
+        int mineCount = 0;
+        foreach (var tile in allTiles.Values)
+            if (tile.isMine) mineCount++;
+
+        float actual = (float)mineCount / total;
+        Debug.Log($"[MapGenerator] 총 타일: {total} | 지뢰: {mineCount} | 실제 밀도: {actual:P1}");
     }
+#endif
 }
