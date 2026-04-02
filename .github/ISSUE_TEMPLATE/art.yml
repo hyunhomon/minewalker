@@ -1,0 +1,39 @@
+name: "[Art] 아트 에셋"
+description: 아트 에셋 추가/수정
+labels: ["art"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 설명
+      placeholder: 필요한 아트 에셋 설명
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: 에셋 타입
+      options:
+        - 스프라이트
+        - 타일셋
+        - UI
+        - 이펙트
+        - 기타
+    validations:
+      required: true
+  - type: textarea
+    id: spec
+    attributes:
+      label: 스펙
+      value: |
+        - 크기: 16x16
+        - 포맷: PNG
+        - 저장 경로: Assets/Sprites/
+  - type: textarea
+    id: done
+    attributes:
+      label: 완료 조건
+      placeholder: |
+        - [ ] 조건 1
+    validations:
+      required: true
